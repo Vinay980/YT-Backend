@@ -1,5 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary';
 import fs from "fs"
+import dotenv from "dotenv"
+
+dotenv.config()
 
 // Configure Cloudinary
 cloudinary.config({
@@ -10,11 +13,11 @@ cloudinary.config({
 
 const uploadOnCloudinary = async (localFilePath) => {
     try {
-        if(!localFilePath) return null
+        if (!localFilePath) return null
         const response = await cloudinary.uploader.upload(
-            localFilePath,{
-                resource_type: "auto"
-            }
+            localFilePath, {
+            resource_type: "auto"
+        }
         )
         console.log("File upload on cloudinary. File Source : " + response.url)
 
@@ -28,4 +31,14 @@ const uploadOnCloudinary = async (localFilePath) => {
     }
 }
 
-export { uploadOnCloudinary }
+const deleteFromCloudinary = async (publicId) => {
+    try {
+        const result = await cloudinary.uploader.destroy(publicId)
+        console.log("Deleted from cloudinary, Public Id ", publicId);
+    } catch (error) {
+        console.log("Failed to Delete from Cloudinary", error);
+        return null
+    }
+}
+
+export { uploadOnCloudinary, deleteFromCloudinary }
